@@ -1,3 +1,11 @@
+# Paquetes (se instalan si faltan)
+paquetes <- c("nortest", "tseries", "knitr", "kableExtra", "car", "BSDA", "dplyr", "ggplot2", "qqplotr")
+dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)
+.libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))
+faltan <- paquetes[!paquetes %in% rownames(installed.packages())]
+if (length(faltan)) install.packages(faltan, repos = "https://cloud.r-project.org")
+library(dplyr)
+
 Covid_Grande = read.csv2("casos_hosp_uci_def_sexo_edad_provres.csv", header = TRUE, sep = ",")
 Covid_pequeño = read.csv2("Covid_muestra_27Datos.csv", header = TRUE, sep = ",")
 
@@ -5,7 +13,6 @@ casosContagios= Covid_Grande$num_casos
 casosContagios_pequeño= Covid_pequeño$num_casos
 
 #Test de normalidad
-install.packages("nortest")
 library(nortest)
 ad.test(casosContagios)
 ad.test(casosContagios_pequeño)
@@ -13,7 +20,6 @@ ad.test(casosContagios_pequeño)
 shapiro_test <- shapiro.test(casosContagios_pequeño)
 shapiro_test
 
-install.packages("tseries")
 library(tseries)
 jb_test <- jarque.bera.test(casosContagios)
 jb_test
@@ -29,8 +35,6 @@ qqline(casosContagios_pequeño, col = "red")
 
 #Tabla de test de normalidad
 # Instalar librerias
-if(!require(knitr)) install.packages("knitr")
-if(!require(kableExtra)) install.packages("kableExtra")
 
 # Crear los datos para la tabla
 tabla <- data.frame(
@@ -50,7 +54,6 @@ knitr::kable(tabla, align = "c", caption = "Tabla 1. Test de normalidad realizad
 
 #Analisis de la homogeneidad de la varianza
 
-install.packages("car")
 library(car)
 # Crear un data frame
 datosLevene <- data.frame(
@@ -65,7 +68,6 @@ resultado <- leveneTest(valores ~ grupo, data = datosLevene)
 print(resultado)
 
 #Calculo intervalos de confianza 95% Media
-install.packages("BSDA")
 library(BSDA)
 z.test(casosContagios, sigma.x=sd(casosContagios), conf.level=0.95)
 t.test(casosContagios_pequeño, conf.level=0.95)
@@ -120,12 +122,11 @@ suma_30_39_pequeño <- sum(Covid_pequeño$num_casos[Covid_pequeño$grupo_edad ==
 print(suma_30_39_pequeño)
 
 
-install.packages("dplyr")
 library(dplyr)
 fechas= Covid_Grande$fecha <- as.Date(Covid_Grande$fecha)
 datos_filtradosInvierno <- Covid_Grande %>%
   filter(format(fecha, "%Y-%m") %in% c("2020-12", "2021-01", "2021-02", "2021-12", "2022-01", "2022-02"))
-print(datos_filtrados)
+print(head(datos_filtradosInvierno))
 datos_filtradosVerano <- Covid_Grande %>%
   filter(format(fecha, "%Y-%m") %in% c("2020-06", "2020-07", "2020-08", "2021-06", "2021-07", "2021-08"))
 sumaInvierno <- sum(datos_filtradosInvierno$num_casos)
@@ -137,7 +138,7 @@ print(sumaVerano)
 fechas_pequeño = Covid_pequeño$fecha <- as.Date(Covid_pequeño$fecha)
 datos_filtradosInvierno_pequeño <- Covid_pequeño %>%
   filter(format(fecha, "%Y-%m") %in% c("2020-12", "2021-01", "2021-02", "2021-12", "2022-01", "2022-02"))
-print(datos_filtradosInvierno_pequeño)
+print(head(datos_filtradosInvierno_pequeño))
 datos_filtradosVerano_pequeño <- Covid_pequeño %>%
   filter(format(fecha, "%Y-%m") %in% c("2020-06", "2020-07", "2020-08", "2021-06", "2021-07", "2021-08"))
 sumaInvierno_pequeño <- sum(datos_filtradosInvierno_pequeño$num_casos)
@@ -413,8 +414,6 @@ crear_grafico(proporcionVerano * 100, (intervaloVerano$conf.int[2] - proporcionV
 
 #Graficos QQ
 # Instalar paquetes
-if (!requireNamespace("ggplot2")) install.packages("ggplot2")
-if (!requireNamespace("qqplotr")) install.packages("qqplotr")
 
 # Cargar las bibliotecas
 library(ggplot2)

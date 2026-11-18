@@ -1,3 +1,12 @@
+# Instala los paquetes que falten y carga los datos (Proyecto.R)
+paquetes <- c("ggplot2")
+dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)
+.libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))
+faltan <- paquetes[!paquetes %in% rownames(installed.packages())]
+if (length(faltan)) install.packages(faltan, repos = "https://cloud.r-project.org")
+library(ggplot2)
+source("Proyecto.R")
+
 numero_hospitalizados = covid2$num_hosp
 numero_fallecidos = covid2$num_def
 # Función para calcular estadísticas
@@ -56,17 +65,20 @@ calcular_estadisticas <- function(x) {
     Rango_Intercuartilico = rango_intercuartilico,
     Coeficiente_Asimetría = coeficiente_asimetría,
     Curtosis = curtosis,
+    Valores_Inferiores = x[x < media],
+    Valores_Superiores = x[x > media]
   )
-  
+
   return(resultados)
 }
 
 # Ejemplo de uso
 x <- numero_hospitalizados
 resultados_hospitalizados <- calcular_estadisticas(x)
+resultados <- resultados_hospitalizados
 
 # Imprime los resultados
-for (i in names(resultados)) {
+for (i in setdiff(names(resultados), c("Valores_Inferiores", "Valores_Superiores"))) {
   cat(i, ": ", resultados[[i]], "\n")
 }
 
@@ -106,8 +118,6 @@ ggplot(df, aes(x = Tipo, fill = Tipo)) +
 ggplot(df, aes(x = Valor)) + 
   geom_density(alpha = 0.5, fill = "skyblue") + 
   labs(title = "Gráfico de densidad de los datos", x = "Valor", y = "Densidad")
-install.packages("ggplot2")
-library(ggplot2)
 hist(num_casos)
 
 sum(numero_casos_Covid2)

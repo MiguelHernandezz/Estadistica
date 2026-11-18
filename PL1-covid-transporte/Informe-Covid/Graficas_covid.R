@@ -1,6 +1,18 @@
-# Cargar las librerías necesarias
+# Cargar las librerías necesarias (se instalan si faltan)
+paquetes <- c("knitr", "ggplot2")
+dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)
+.libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))
+faltan <- paquetes[!paquetes %in% rownames(installed.packages())]
+if (length(faltan)) install.packages(faltan, repos = "https://cloud.r-project.org")
 library(knitr)
 library(ggplot2)
+
+# Datos (Proyecto.R carga los CSV)
+source("Proyecto.R")
+numero_hospitalizados = covid2$num_hosp
+numero_fallecidos = covid2$num_def
+# Intervalos de Sturges: ceiling(1 + 3.322 * log10(n)) = 22
+diagnostico_intervalos <- cut(numero_casos_Covid2, breaks = 22)
 # Crear los datos en un data frame
 tabla_resultados <- data.frame(
   Medida = c("Media", "Mediana", "Mínimo", "Máximo", "Rango", "Varianza", "Desviación estándar",
@@ -47,7 +59,7 @@ porcentaje_fallecidos
 porcentajesDiagrama1= c(4.48, 0.89, 94.63)
 etiquetas= c("Hospitalizados 4.48%", "Fallecidos 0.89%", "Resto de diagnosticados 94.63%")
 colores <- c("cyan", "blue", "red")
-pie(porcentajes, labels = etiquetas, col = colores, main = "Diagrama con el porcentaje de diagnosticados")
+pie(porcentajesDiagrama1, labels = etiquetas, col = colores, main = "Diagrama con el porcentaje de diagnosticados")
 
 #Diagrama diagnosticados
 poblacionES = 47398695

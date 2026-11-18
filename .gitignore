@@ -3,3 +3,7 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# Outputs generated when running the scripts with Rscript
+Rplots.pdf
+tabla_contraste_hipotesis.html

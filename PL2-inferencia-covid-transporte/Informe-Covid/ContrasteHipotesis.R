@@ -1,3 +1,10 @@
+# Paquetes (se instalan si faltan)
+dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)
+.libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))
+if (!"gt" %in% rownames(installed.packages())) install.packages("gt", repos = "https://cloud.r-project.org")
+
+# Las sumas y totales se calculan en PL2.R
+source("PL2.R")
 
 # Realizar la prueba de proporciones de dos muestras
 resultadoHM <- prop.test(x = c(suma_hombres, suma_mujeres), n = c(total, total), alternative = "greater", correct = FALSE)
@@ -56,9 +63,6 @@ resultadoIV <- prop.test(x = c(sumaInvierno_pequeño, sumaVerano_pequeño), n = 
 print(resultadoIV)
 
 
-# Instalar librería 
-install.packages("gt")
-
 # Cargar la librería
 library(gt)
 
@@ -96,8 +100,12 @@ tabla_muestra_pequena <- data.frame(
   `p-valor` = c(0.0001604, 0.8413, 0.9994, 5.381e-07)
 )
 
-# Crear la tabla con gt
-gt(tabla_muestra_pequena) %>%
+# Tablas en texto (consola)
+print(tabla)
+print(tabla_muestra_pequena)
+
+# Crear la tabla con gt (se ve en el Viewer de RStudio; con Rscript se guarda en HTML)
+tabla_gt <- gt(tabla_muestra_pequena) %>%
   tab_header(
     title = "Tabla 4. Contraste de hipótesis usando muestras pequeñas"
   ) %>%
@@ -105,4 +113,10 @@ gt(tabla_muestra_pequena) %>%
     columns = `p.valor`, # Columna a formatear
     decimals = 4         # Número de decimales a mostrar
   )
+if (interactive()) {
+  print(tabla_gt)
+} else {
+  tryCatch(gtsave(tabla_gt, "tabla_contraste_hipotesis.html"),
+           error = function(e) message("No se pudo guardar la tabla HTML: ", conditionMessage(e)))
+}
 

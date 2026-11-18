@@ -54,9 +54,26 @@ Two lab projects built on the same question: **did public transport usage in Spa
 
 ## ▶️ Run it
 
-1. Open the `.Rproj` file of any subfolder in RStudio.
-2. Install the packages used: `install.packages(c("ggplot2", "knitr", "nortest", "tseries", "car", "BSDA", "gt"))`.
-3. Run the `.R` scripts. The CSV files are in the same folder.
+Requires [R](https://cran.r-project.org/) ≥ 4.x. Every script is self-contained: it installs any missing CRAN package and loads its own data from the CSV files in the same folder.
+
+**RStudio:** open the `.Rproj` file of a folder and *Source* any script.
+
+**Command line:**
+
+```bash
+cd PL1-covid-transporte/Informe-Covid
+Rscript Calculos_Covid.R          # descriptive stats + ggplot2 charts (Proyecto.R loads the data)
+Rscript Graficas_covid.R          # frequency tables, pie charts, histograms, box plots
+
+cd ../Informe-Transporte
+Rscript "Grafica transporte publico general.R"
+
+cd ../../PL2-inferencia-covid-transporte/Informe-Covid
+Rscript PL2.R                     # normality tests, Levene, confidence intervals
+Rscript ContrasteHipotesis.R      # one-sided proportion tests (runs PL2.R first)
+```
+
+Outside RStudio, charts are written to `Rplots.pdf` in each folder. `PL1-covid-transporte` loads a ~38 MB CSV with 1.3M rows, so the first run takes a little longer.
 
 ---
 
