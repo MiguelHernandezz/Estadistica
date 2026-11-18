@@ -77,6 +77,21 @@ Outside RStudio, charts are written to `Rplots.pdf` in each folder. `PL1-covid-t
 
 ---
 
+<!-- syllabus:start -->
+## 📘 Syllabus · official UAH teaching guide
+
+> **Estadística (780004)** · 6 ECTS · 1st year · 1st semester · contents from the 2024-25 teaching guide · [official subject page](https://www.uah.es/es/estudios/estudios-oficiales/grados/asignatura/Estadistica-780004/)
+
+| Unit | Hours | Topics |
+|---|---|---|
+| Introduction | 6 h | – |
+| Descriptive statistics tools | 12 h | – |
+| Random variables and probability distribution models | 12 h | – |
+| Statistical inference | 26 h | – |
+<!-- syllabus:end -->
+
+---
+
 <div align="center">
 
 Miguel Hernández López · [GitHub](https://github.com/MiguelHernandezz) · [LinkedIn](https://www.linkedin.com/in/miguel-hernandez-lopez/)
